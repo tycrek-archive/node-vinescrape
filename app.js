@@ -28,11 +28,6 @@ function readVineIds() {
 }
 
 function Main(ids) {
-	singleWorker(ids);
-}
-
-function singleWorker(ids) {
-	//ids.split('\r\n').forEach((vineId) => {});
 	scrape(shuffle(ids.split('\r\n')));
 }
 
