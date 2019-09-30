@@ -1,0 +1,28 @@
+vines
+- username TEXT
+- useridstr TEXT
+- postid BIGINT
+- verified BOOLEAN
+- description TEXT
+- created TIMESTAMP
+- permalinkurl TEXT
+- userid BIGINT
+- vanityurls TEXT[]
+- entities TEXT[]
+- postidstr TEXT
+- comments INT
+- reposts INT
+- loops BIGINT
+- likes INT
+- videolowurl TEXT
+- videourl TEXT
+- videodashurl TEXT
+- thumbnailurl TEXT
+- explicitcontent BOOLEAN
+- vineid TEXT
+
+scrapes
+- vineid TEXT
+- postid BIGINT
+- scraped BOOLEAN
+- success BOOLEAN
