@@ -30,10 +30,10 @@ exports.createVine = (vineId, json) => {
 		json.reposts,
 		json.loops,
 		json.likes,
-		json.videolowurl,
-		json.videourl,
-		json.videodashurl,
-		json.thumbnailurl,
+		json.videoLowUrl,
+		json.videoUrl,
+		json.videoDashUrl,
+		json.thumbnailUrl,
 		vineId
 	];
 	let q = `INSERT INTO vines(
