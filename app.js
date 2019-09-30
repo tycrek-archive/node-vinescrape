@@ -48,6 +48,11 @@ function scrape(ids) {
 		.then(() => scrape(ids));
 }
 
+/**
+ *
+ * @param {String} vineId The Vine ID that data was scraped for
+ * @param {JSON} json The Vine data object that was scraped
+ */
 function dataHandle(vineId, json) {
 	return new Promise((resolve, reject) => {
 		console.log(`Vine ${vineId} fetched`);
@@ -58,6 +63,11 @@ function dataHandle(vineId, json) {
 	});
 }
 
+/**
+ * Deal with the error
+ * @param {String} vineId Vine ID that caused an error
+ * @param {Error} err Error thrown by calling function
+ */
 function errorHandle(vineId, err) {
 	return new Promise((resolve, reject) => {
 		console.log(`! Vine ${vineId} encountered an error: ${err}`);
