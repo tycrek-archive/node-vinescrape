@@ -1,13 +1,14 @@
+var os = require('os');
 var fs = require('fs-extra');
 var path = require('path');
 var fetch = require('node-fetch');
+var { Worker } = require('worker_threads');
 
-var Psql = require()
+var Psql = require('./psql');
 
+const ARCHIVE_URL = 'https://archive.vine.co/posts/';
 const VINE_ID_URL = 'https://do-space.jmoore.dev/vine_ids_no_dupes.txt';
 const VINE_ID_FILE = path.join(__dirname, 'vine_ids_no_dupes.txt');
-const ARCHIVE_URL = 'https://archive.vine.co/posts/';
-
 
 // First check if the vine_ids.txt file exists
 fs.pathExists(VINE_ID_FILE)
@@ -29,5 +30,71 @@ function readVineIds() {
 }
 
 function Main(ids) {
+	//workerSetup(ids);
+	singleWorker(ids);
+}
 
+function workerSetup(ids) {
+	let idsList = ids.split('\r\n');
+	let threadCount = os.cpus().length;
+	let chunkSize = idsList.length / threadCount;
+	let workers = [];
+
+	for (let i = 0; i < threadCount; i++) {
+		let worker = new Worker(
+			path.join(__dirname, 'worker.js'),
+			{ workerData: idsList.splice(0, chunkSize) }
+		);
+		worker.on('online', () => console.log(`Thread ${i} online`));
+		worker.on('error', (err) => console.error(err));
+		worker.on('exit', (exitCode) => console.log(`Thread ${i} exited with code ${exitCode}`));
+		worker.on('message', (message) => console.log(`Message from Thread ${i}: ${message}`));
+	}
+}
+
+function singleWorker(ids) {
+	//ids.split('\r\n').forEach((vineId) => {});
+	scrape(ids.split('\r\n'));
+}
+
+function scrape(ids) {
+	let vineId = ids.shift();
+	let target = ARCHIVE_URL + vineId + '.json';
+	Psql.getScrape(vineId)
+		.then((result) => result.rowCount)
+		.then((count) => {
+			if (count == 0) return target;
+			else throw 'Already scraped';
+		})
+		.then((target) => fetch(target))
+		.then((res) => res.json())
+		.then((json) => dataHandle(vineId, json))
+		.catch((err) => errorHandle(vineId, err))
+		.catch((err) => console.error(err))
+		.then(() => scrape(ids));
+}
+
+function dataHandle(vineId, json) {
+	return new Promise((resolve, reject) => {
+		console.log(`Vine ${vineId} fetched`);
+		Psql.createScrape(vineId, true, true)
+			.then(() => Psql.createVine(vineId, json))
+			.then(() => resolve())
+			.catch((err) => reject(err));
+	});
+}
+
+function errorHandle(vineId, err) {
+	return new Promise((resolve, reject) => {
+		console.log(`! Vine ${vineId} encountered an error: ${err}`);
+		Psql.getScrape(vineId)
+			.then((result) => result.rowCount)
+			.then((count) => {
+				if (count == 0) return;
+				else throw null;
+			})
+			.then(() => Psql.createScrape(vineId, true, false))
+			.then(() => resolve())
+			.catch((err) => reject(err));
+	});
 }
