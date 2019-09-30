@@ -59,3 +59,7 @@ typings/
 
 # next.js build output
 .next
+
+# tycrek additions
+# auth files
+auth.json
