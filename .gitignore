@@ -63,3 +63,6 @@ typings/
 # tycrek additions
 # auth files
 auth.json
+
+# id file
+vine_ids_no_dupes.txt
