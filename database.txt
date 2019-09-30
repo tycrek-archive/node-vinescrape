@@ -23,6 +23,5 @@ vines
 
 scrapes
 - vineid TEXT
-- postid BIGINT
 - scraped BOOLEAN
 - success BOOLEAN
