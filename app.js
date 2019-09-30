@@ -1,8 +1,6 @@
-var os = require('os');
 var fs = require('fs-extra');
 var path = require('path');
 var fetch = require('node-fetch');
-var { Worker } = require('worker_threads');
 
 var Psql = require('./psql');
 
@@ -30,26 +28,7 @@ function readVineIds() {
 }
 
 function Main(ids) {
-	//workerSetup(ids);
 	singleWorker(ids);
-}
-
-function workerSetup(ids) {
-	let idsList = ids.split('\r\n');
-	let threadCount = os.cpus().length;
-	let chunkSize = idsList.length / threadCount;
-	let workers = [];
-
-	for (let i = 0; i < threadCount; i++) {
-		let worker = new Worker(
-			path.join(__dirname, 'worker.js'),
-			{ workerData: idsList.splice(0, chunkSize) }
-		);
-		worker.on('online', () => console.log(`Thread ${i} online`));
-		worker.on('error', (err) => console.error(err));
-		worker.on('exit', (exitCode) => console.log(`Thread ${i} exited with code ${exitCode}`));
-		worker.on('message', (message) => console.log(`Message from Thread ${i}: ${message}`));
-	}
 }
 
 function singleWorker(ids) {
