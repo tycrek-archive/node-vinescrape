@@ -76,6 +76,7 @@ function errorHandle(vineId, err) {
 /**
  * Shuffle array in place. ES6 version
  * @param {Array} a items An array containing items
+ * @returns {Array} a items The shuffled array
  * https://stackoverflow.com/questions/6274339/how-can-i-shuffle-an-array
  */
 function shuffle(a) {
