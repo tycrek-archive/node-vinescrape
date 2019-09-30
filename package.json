@@ -1,0 +1,27 @@
+{
+  "name": "vinescrape",
+  "version": "1.0.0",
+  "description": "Yet another attempt at rescuing Vine",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tycrek/node-vinescrape.git"
+  },
+  "keywords": [
+    "vine",
+    "scrape",
+    "archive"
+  ],
+  "author": "tycrek",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/tycrek/node-vinescrape/issues"
+  },
+  "homepage": "https://github.com/tycrek/node-vinescrape#readme",
+  "dependencies": {
+    "node-fetch": "^2.6.0"
+  }
+}
